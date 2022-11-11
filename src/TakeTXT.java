@@ -9,14 +9,13 @@ public class TakeTXT {
         ArrayList<String> docPull = new ArrayList<>();
         String docTunel = null;
         while ((docTunel = scanner.nextLine()) != null) {
-            if ("0".equals(docPull)) {
+            if ("0".equals(docTunel)) {
                 break;
             } else {
                 docPull.add(docTunel);
             }
         }
         Set<String> docNum = new HashSet<String>();
-        File file = new File("src");
         for (String elem : docPull) {
             try (BufferedReader br = new BufferedReader(new FileReader(elem))) {
                 String read;
@@ -31,25 +30,28 @@ public class TakeTXT {
         for (String elem :
                 docNum) {
             if ((elem.startsWith("docnum") || elem.startsWith("contract")) && elem.length() == 15) {
-                System.out.println(read);
-                valid(read, "документ соответствует параметрам");
-            } else if (!(read.startsWith("docnum") || read.startsWith("contract")) && read.length() == 15) {
-                notValid(read, "номер документа не начинается с заданых параметров, но соотвествует длинне");
+                toTxt("\\valid.txt", elem);
+                toTxt("\\report.txt", elem, "Документ имеет валидный номер");
+            } else if (!(elem.startsWith("docnum") || elem.startsWith("contract")) && elem.length() == 15) {
+                toTxt("\\notvalid.txt", elem);
+                toTxt("\\report.txt", elem, "номер документа не начинается с заданых параметров, но соотвествует длинне");
             } else {
-                notValid(read, "документ не соотвествует параметрам длинны и начальных значений");
+                toTxt("\\notvalid.txt", elem);
+                toTxt("\\report.txt", elem, "документ не соотвествует параметрам длинны и начальных значений");
             }
         }
 
     }
 
-    public void valid(String docText, String message) {
+    public void toTxt(String nameTXT, String docNum, String message) {
         try {
-            File file = new File("D:\\TMS\\les12\\valid.txt");
+            File fileDirect = new File("src");
+            File file = new File(fileDirect + nameTXT);
             if (!file.exists()) {
-                file = new File("D:\\TMS\\les12\\valid.txt");
+                file = new File(fileDirect + nameTXT);
             }
             BufferedWriter bw = new BufferedWriter(new FileWriter(file.getAbsolutePath(), true));
-            bw.write(docText
+            bw.write(docNum
                     + " "
                     + message
                     + "\n");
@@ -58,17 +60,15 @@ public class TakeTXT {
             System.out.println(a);
         }
     }
-
-    public void notValid(String docText, String message) {
+    public void toTxt(String nameTXT, String docNum) {
         try {
-            File file = new File("D:\\TMS\\les12\\notValid.txt");
+            File fileDirect = new File("src");
+            File file = new File(fileDirect + nameTXT);
             if (!file.exists()) {
-                file = new File("D:\\TMS\\les12\\notValid.txt");
+                file = new File(fileDirect + nameTXT);
             }
             BufferedWriter bw = new BufferedWriter(new FileWriter(file.getAbsolutePath(), true));
-            bw.write(docText
-                    + " "
-                    + message
+            bw.write(docNum
                     + "\n");
             bw.close();
         } catch (Exception a) {
