@@ -10,6 +10,7 @@ public class TakeTXT {
         String docTunel = null;
         while ((docTunel = scanner.nextLine()) != null) {
             if ("0".equals(docTunel)) {
+                scanner.close();
                 break;
             } else {
                 docPull.add(docTunel);
